@@ -1,0 +1,8 @@
+{
+  "appId": "com.nexus.productivity",
+  "appName": "NEXUS",
+  "webDir": "out",
+  "android": {
+    "backgroundColor": "#08080c"
+  }
+}
