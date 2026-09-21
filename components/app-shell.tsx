@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -122,7 +124,12 @@ export default function AppShell({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
+  const [identityRevealed, setIdentityRevealed] =
+    useState<boolean>(false);
+
+  const [logoTapCount, setLogoTapCount] =
+    useState<number>(0);
+const pathname = usePathname();
   const router = useRouter();
 
   const [name, setName] =
@@ -610,19 +617,48 @@ export default function AppShell({
           href="/dashboard"
           className="flex items-center gap-3 px-2 py-1"
         >
-          <div className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-violet-500 via-purple-500 to-cyan-400 text-lg font-black text-white">
-            N
-          </div>
+          <button
+            type="button"
+            aria-label="NEXUS logo"
+            className="group flex items-center gap-3 rounded-2xl text-left outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+            onClick={() => {
+              const nextCount = logoTapCount + 1;
 
-          <div>
-            <b className="tracking-[.16em]">
-              NEXUS
-            </b>
+              if (nextCount >= 7) {
+                setIdentityRevealed((current) => !current);
+                setLogoTapCount(0);
+                return;
+              }
 
-            <p className="text-[9px] uppercase tracking-[.22em] text-zinc-500">
-              Personal OS
-            </p>
-          </div>
+              setLogoTapCount(nextCount);
+            }}
+          >
+            <Image
+              src="/icon.png"
+              alt="NEXUS"
+              width={40}
+              height={40}
+              priority
+              className="h-10 w-10 rounded-2xl object-cover"
+            />
+
+            <div className="min-w-0">
+              <div
+                className="truncate text-sm font-semibold tracking-[0.18em]"
+                style={{ color: "var(--nexus-text)" }}
+              >
+                NEXUS
+              </div>
+
+              <div
+                className="truncate text-[9px] font-medium uppercase tracking-[0.22em]"
+                style={{ color: "var(--nexus-muted)" }}
+              >
+                Personal OS
+              </div>
+            </div>
+          </button>
+
         </Link>
 
         <div
@@ -923,9 +959,31 @@ export default function AppShell({
 
         </header>
 
-        {children}
+<div
+  className="nexus-dashboard-watermark"
+  aria-hidden="true"
+>
+  <Image
+    src="/nexus-watermark.png"
+    alt=""
+    width={520}
+    height={520}
+    className="nexus-watermark-icon"
+    style={{ opacity: 0.30 }}
+  />
+</div>
 
-        {/* =====================================================
+{identityRevealed && (
+  <div
+    className="nexus-identity-reveal"
+    role="status"
+  >
+    Gangapuram Tanuj Reddy
+  </div>
+)}
+
+{children}
+{/* =====================================================
             MOBILE SCROLL CLEARANCE
             =====================================================
 
